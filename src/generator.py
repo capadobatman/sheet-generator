@@ -1,7 +1,8 @@
-from music21 import stream, note, meter, key, environment
+from music21 import stream, note, meter, key, environment # type: ignore
 import random
 import os
 import shutil
+import subprocess
 
 
 os.makedirs('outputs', exist_ok=True)
@@ -15,7 +16,7 @@ def configure_lilypond():
     else:
         raise EnvironmentError("LilyPond not found in PATH.")
 
-def generate_random_score(output_file='outputs/random_score.pdf'):
+def generate_random_score(output_file='outputs/random_score'):
     configure_lilypond()
 
     s = stream.Stream()
@@ -28,4 +29,10 @@ def generate_random_score(output_file='outputs/random_score.pdf'):
             pitch = random.choice(notes)
             s.append(note.Note(pitch, quarterLength=1))
 
-    s.write('lily.pdf', fp=output_file)
+    s.includeLayout = False
+    s.write('lilypond', fp=f'{output_file}.ly') 
+
+    try:
+        subprocess.run(['lilypond', f'{output_file}.ly'], check=True)
+    except subprocess.CalledProcessError:
+        raise RuntimeError(f"LilyPond failed to compile {output_file}.ly")
