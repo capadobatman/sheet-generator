@@ -27,7 +27,7 @@ def clean_ly_file(path):
         file.writelines(cleaned)
 
 def generate_random_score(output_file='random_score'):
-    configure_lilypond()
+    os.makedirs('outputs', exist_ok=True)
 
     s = stream.Stream()
     s.append(meter.TimeSignature("4/4"))
@@ -39,18 +39,12 @@ def generate_random_score(output_file='random_score'):
             pitch = random.choice(notes)
             s.append(note.Note(pitch, quarterLength=1))
 
-    outputs_dir = 'outputs'
-    os.makedirs(outputs_dir, exist_ok=True)
-
-    ly_filename = f'{output_file}.ly'
-    ly_path = os.path.join(outputs_dir, ly_filename)
+    ly_path = f'outputs/{output_file}.ly'
     s.write('lilypond', fp=ly_path)
 
     clean_ly_file(ly_path)
 
     try:
-        subprocess.run(['lilypond', ly_filename], cwd=outputs_dir, check=True)
-    except subprocess.CalledProcessError:
-        raise RuntimeError(f"LilyPond failed to compile {ly_path}")
-    
-    os.remove(ly_path)
+        subprocess.run(['lilypond', f'{output_file}.ly'], cwd='outputs', check=True)
+    except subprocess.CalledProcessError as e:
+        raise RuntimeError(f"LilyPond failed to compile {ly_path}") from e
