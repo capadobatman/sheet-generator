@@ -5,9 +5,6 @@ import shutil
 import subprocess
 
 
-os.makedirs('outputs', exist_ok=True)
-
-
 def configure_lilypond():
     lily_path = shutil.which("lilypond")
     if lily_path:
@@ -29,7 +26,7 @@ def clean_ly_file(path):
     with open(path, 'w', encoding='utf-8') as file:
         file.writelines(cleaned)
 
-def generate_random_score(output_file='outputs/random_score'):
+def generate_random_score(output_file='random_score'):
     configure_lilypond()
 
     s = stream.Stream()
@@ -42,13 +39,16 @@ def generate_random_score(output_file='outputs/random_score'):
             pitch = random.choice(notes)
             s.append(note.Note(pitch, quarterLength=1))
 
-    ly_path = f'{output_file}.ly'
+    outputs_dir = 'outputs'
+    os.makedirs(outputs_dir, exist_ok=True)
+
+    ly_filename = f'{output_file}.ly'
+    ly_path = os.path.join(outputs_dir, ly_filename)
     s.write('lilypond', fp=ly_path)
 
-    # Corrige o .ly antes de chamar o LilyPond
     clean_ly_file(ly_path)
 
     try:
-        subprocess.run(['lilypond', ly_path], check=True)
+        subprocess.run(['lilypond', ly_filename], cwd=outputs_dir, check=True)
     except subprocess.CalledProcessError:
         raise RuntimeError(f"LilyPond failed to compile {ly_path}")
