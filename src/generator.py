@@ -20,7 +20,7 @@ def clean_ly_file(path):
     cleaned = []
     for line in lines:
         if "RemoveEmptyStaffContext" in line or "VerticalAxisGroup" in line:
-            continue  # Remove a linha
+            continue  
         cleaned.append(line)
 
     with open(path, 'w', encoding='utf-8') as file:
@@ -52,3 +52,5 @@ def generate_random_score(output_file='random_score'):
         subprocess.run(['lilypond', ly_filename], cwd=outputs_dir, check=True)
     except subprocess.CalledProcessError:
         raise RuntimeError(f"LilyPond failed to compile {ly_path}")
+    
+    os.remove(ly_path)

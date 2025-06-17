@@ -1,0 +1,10 @@
+services:
+  sheetgen:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sheet_generator
+    volumes:
+      - ./outputs:/app/outputs
+    working_dir: /app
+    command: python main.py
