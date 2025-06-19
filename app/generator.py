@@ -3,6 +3,11 @@ import random
 import os
 import shutil
 import subprocess
+from pathlib import Path
+
+
+STATIC_DIR = Path(__file__).resolve().parent / "static"
+STATIC_DIR.mkdir(exist_ok=True)
 
 
 def configure_lilypond():
@@ -26,8 +31,7 @@ def clean_ly_file(path):
     with open(path, 'w', encoding='utf-8') as file:
         file.writelines(cleaned)
 
-def generate_random_score(output_file='random_score'):
-    os.makedirs('outputs', exist_ok=True)
+def generate_random_score(output_file='score'):
 
     s = stream.Stream()
     s.append(meter.TimeSignature("4/4"))
@@ -39,12 +43,15 @@ def generate_random_score(output_file='random_score'):
             pitch = random.choice(notes)
             s.append(note.Note(pitch, quarterLength=1))
 
-    ly_path = f'outputs/{output_file}.ly'
-    s.write('lilypond', fp=ly_path)
+    ly_path = STATIC_DIR / f"{output_file}.ly"
+    s.write('lilypond', fp=str(ly_path))
 
     clean_ly_file(ly_path)
 
     try:
-        subprocess.run(['lilypond', f'{output_file}.ly'], cwd='outputs', check=True)
+        subprocess.run(['lilypond', "--png",  f'{output_file}.ly'], cwd=str(STATIC_DIR), check=True)
     except subprocess.CalledProcessError as e:
-        raise RuntimeError(f"LilyPond failed to compile {ly_path}") from e
+        print("STDERR:", e.stderr)
+        raise RuntimeError(f"LilyPond failed: {e}") from e
+    
+    os.remove(ly_path)
