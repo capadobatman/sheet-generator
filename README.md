@@ -22,6 +22,6 @@ A web-based tool for generating random musical scores using Python, Flask, music
 ### Steps:
 
 ```bash
-git clone https://github.com/your-username/random-score-generator.git
-cd random-score-generator
+git clone https://github.com/capadobatman/sheet-generator.git
+cd sheet-generator
 docker-compose up --build
