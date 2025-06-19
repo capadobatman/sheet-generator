@@ -1,33 +1,27 @@
-Random Sheet Generator
+# Random Score Generator
 
+A web-based tool for generating random musical scores using Python, Flask, music21, and LilyPond. A new score is created with a single click and rendered as an image in the browser.
 
-This project generates random music scores using Python, Music21, and LilyPond. It uses Docker to ensure the environment works consistently across all operating systems
+## Features
 
+- Random score generation 
+- LilyPond rendering to `.png`
+- Flask web interface
+- Light/dark mode toggle (built-in)
+- Works locally or via Docker
 
-Prerequisites
+---
 
+## Run with Docker (Recommended)
 
-Docker
+**No need to install Python or LilyPond on your system.**
 
-Docker Compose
+### Requirements:
+- [Docker](https://www.docker.com/)
 
-Running
+### Steps:
 
-Inside project folder:
-
-docker-compose build              # Build the image
-
-docker-compose run --rm sheetgen  # Run the generator
-
-
-Output
-
-Downloaded sheet PDF via webpage
-
-
-Cleaning Up
-
-
-docker image prune       # Remove unused images
-
-docker container prune   # Remove stopped containers
+```bash
+git clone https://github.com/your-username/random-score-generator.git
+cd random-score-generator
+docker-compose up --build
