@@ -1,13 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Music Score Generator</title>
+    <meta charset="UTF-8">
+    <title>Random Score Generator</title>
 </head>
 <body>
-    <h1>Generate a random music score</h1>
-    <form method="post">
-        <!-- Aqui você pode adicionar inputs para customizar a partitura -->
-        <button type="submit">Generate PDF</button>
+    <h1>Generate a Random Score</h1>
+
+    <form action="{{ url_for('generate') }}" method="get">
+        <button type="submit">Generate Score</button>
     </form>
+
+    {% if image %}
+        <h2>Generated Score:</h2>
+        <img src="{{ url_for('static', filename='score.png') }}" alt="Generated Score">
+    {% endif %}
 </body>
 </html>
