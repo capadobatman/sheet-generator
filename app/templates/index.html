@@ -2,97 +2,84 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Random Score Generator</title>
+  <title>Score Generator</title>
   <style>
     body {
       margin: 0;
-      padding: 0;
-      font-family: sans-serif;
-      background-color: #000;
-      color: #fff;
-    }
-
-    .container {
-      display: flex;
       height: 100vh;
+      background-color: black;
+      color: white;
+      display: flex;
     }
 
     .left, .right {
       width: 20%;
       padding: 20px;
+      box-sizing: border-box;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      align-items: flex-start; 
     }
 
     .center {
-      width: 60%;
+      flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
+      overflow: hidden;
     }
 
-    h1 {
-      font-size: 1.5em;
+    img.score {
+      max-height: 100vh;
+      height: 100%;
+      width: auto;
+      display: block;
     }
 
     button {
-      padding: 10px;
-      margin-top: 10px;
-      font-size: 1rem;
-      background-color: #fff;
-      color: #000;
+      background-color: white;
+      color: black;
+      padding: 10px 20px;
       border: none;
       cursor: pointer;
+      font-size: 16px;
     }
 
     button:hover {
-      background-color: #ccc;
-    }
-
-    img {
-      max-width: 100%;
-      max-height: 90vh;
-      border: 1px solid #555;
+      background-color: gray;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Lado esquerdo -->
-    <div class="left">
-      <h1>Random Score Generator</h1>
-      <form action="{{ url_for('main.generate') }}" method="get">
-        <button type="submit">Generate Score</button>
-      </form>
-    </div>
+  <div class="left">
+    <h1>Generate a Random Score</h1>
+    <form action="{{ url_for('main.generate') }}" method="get">
+      <button type="submit">Generate Score</button>
+    </form>
+  </div>
 
-    <!-- Centro -->
-    <div class="center">
-      {% if image %}
-        <img src="{{ url_for('static', filename='score.png') }}" alt="Generated Score">
-      {% else %}
-        <p>No score generated yet.</p>
-      {% endif %}
-    </div>
+  <div class="center">
+    {% if image %}
+      <img class="score" src="{{ url_for('static', filename='score.png') }}" alt="Generated Score">
+    {% else %}
+      <p>No score generated yet.</p>
+    {% endif %}
+  </div>
 
-    <!-- Lado direito -->
-    <div class="right">
-      <button onclick="toggleTheme()">Toggle Theme</button>
-      <!-- Mais opções podem ser adicionadas aqui -->
-    </div>
+  <div class="right">
+    <button onclick="toggleTheme()">Toggle Theme</button>
   </div>
 
   <script>
     function toggleTheme() {
       const body = document.body;
-      const isDark = body.style.backgroundColor === 'black' || body.style.backgroundColor === '#000';
-      if (isDark) {
-        body.style.backgroundColor = 'white';
-        body.style.color = 'black';
+      if (body.style.backgroundColor === "black") {
+        body.style.backgroundColor = "white";
+        body.style.color = "black";
       } else {
-        body.style.backgroundColor = 'black';
-        body.style.color = 'white';
+        body.style.backgroundColor = "black";
+        body.style.color = "white";
       }
     }
   </script>
