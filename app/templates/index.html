@@ -61,7 +61,7 @@
 
   <div class="center">
     {% if image %}
-      <img class="score" src="{{ url_for('static', filename='score.png') }}" alt="Generated Score">
+      <img id="scoreImage" class="score" src="{{ url_for('static', filename='score.png') }}" alt="Generated Score">
     {% else %}
       <p>No score generated yet.</p>
     {% endif %}
@@ -72,16 +72,32 @@
   </div>
 
   <script>
-    function toggleTheme() {
-      const body = document.body;
-      if (body.style.backgroundColor === "black") {
-        body.style.backgroundColor = "white";
-        body.style.color = "black";
-      } else {
-        body.style.backgroundColor = "black";
-        body.style.color = "white";
-      }
+  function setTheme(isDark) {
+    const body = document.body;
+    const img = document.getElementById("scoreImage");
+
+    if (isDark) {
+      body.style.backgroundColor = "black";
+      body.style.color = "white";
+      if (img) img.src = "{{ url_for('static', filename='score_dark.png') }}";
+      localStorage.setItem('theme', 'dark');
+    } else {
+      body.style.backgroundColor = "white";
+      body.style.color = "black";
+      if (img) img.src = "{{ url_for('static', filename='score.png') }}";
+      localStorage.setItem('theme', 'light');
     }
+  }
+
+  function toggleTheme() {
+    const current = localStorage.getItem('theme');
+    setTheme(current !== 'dark');
+  }
+
+  window.onload = function () {
+    const saved = localStorage.getItem('theme');
+    setTheme(saved === 'dark');
+  };
   </script>
 </body>
 </html>

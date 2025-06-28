@@ -1,4 +1,5 @@
 from music21 import stream, note, meter, key, environment # type:ignore
+from PIL import Image, ImageOps #type:ignore
 import random
 import os
 import shutil
@@ -17,6 +18,13 @@ def configure_lilypond() -> None:
         env['lilypondPath'] = lily_path
     else:
         raise EnvironmentError("LilyPond not found in PATH.")
+    
+
+def invert_score_colors(path: Path) -> None:
+    img = Image.open(path).convert('RGB')
+    inverted = ImageOps.invert(img)
+    inverted_path = path.with_name(path.stem + '_dark.png')
+    inverted.save(inverted_path)
 
 
 def clean_ly_file(path: str) -> None:
@@ -80,3 +88,4 @@ def generate_random_score(output_file='score') -> None:
         raise RuntimeError(f"LilyPond failed: {e}") from e
     
     os.remove(ly_path)
+    invert_score_colors(STATIC_DIR / f"{output_file}.png")
