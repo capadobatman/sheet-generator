@@ -3,59 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Score Generator</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      background-color: black;
-      color: white;
-      display: flex;
-    }
-
-    .left, .right {
-      width: 20%;
-      padding: 20px;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-start; 
-    }
-
-    .center {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-    }
-
-    img.score {
-      max-height: 100vh;
-      height: 100%;
-      width: auto;
-      display: block;
-    }
-
-    button {
-      background-color: white;
-      color: black;
-      padding: 10px 20px;
-      border: none;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    button:hover {
-      background-color: gray;
-    }
-  </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <div class="left">
     <h1>Generate a Random Score</h1>
     <form action="{{ url_for('main.generate') }}" method="get">
-      <button type="submit">Generate Score</button>
+      <button id="generateBtn" class="light" type="submit">Generate Score</button>
     </form>
   </div>
 
@@ -68,36 +22,9 @@
   </div>
 
   <div class="right">
-    <button onclick="toggleTheme()">Toggle Theme</button>
+    <button id="themeToggleBtn" class="light" onclick="toggleTheme()">Toggle Theme</button>
   </div>
 
-  <script>
-  function setTheme(isDark) {
-    const body = document.body;
-    const img = document.getElementById("scoreImage");
-
-    if (isDark) {
-      body.style.backgroundColor = "black";
-      body.style.color = "white";
-      if (img) img.src = "{{ url_for('static', filename='score_dark.png') }}";
-      localStorage.setItem('theme', 'dark');
-    } else {
-      body.style.backgroundColor = "white";
-      body.style.color = "black";
-      if (img) img.src = "{{ url_for('static', filename='score.png') }}";
-      localStorage.setItem('theme', 'light');
-    }
-  }
-
-  function toggleTheme() {
-    const current = localStorage.getItem('theme');
-    setTheme(current !== 'dark');
-  }
-
-  window.onload = function () {
-    const saved = localStorage.getItem('theme');
-    setTheme(saved === 'dark');
-  };
-  </script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
