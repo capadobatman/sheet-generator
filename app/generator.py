@@ -27,15 +27,15 @@ def invert_score_colors(path: Path) -> None:
     inverted.save(inverted_path)
 
 
-def clean_ly_file(path: str) -> None:
+def clean_ly_file(path: str, staffsize=25) -> None:
     with open(path, 'r', encoding='utf-8') as file:
         lines = file.readlines()
 
-    cleaned = []
+    cleaned = [f"#(set-global-staff-size {staffsize})\n"]
     in_paper_block = False
     paper_modified = False
 
-    #remove uncompatible lines andd tagline
+    #remove uncompatible lines and tagline
     for line in lines:
         if "lilypond-book-preamble.ly" in line:
             continue
@@ -47,12 +47,13 @@ def clean_ly_file(path: str) -> None:
             in_paper_block = True
 
         if in_paper_block and "}" in line and not paper_modified:
-            cleaned.append("  tagline = ##f\n")  
+            cleaned.append("  tagline = ##f\n")
             paper_modified = True
             in_paper_block = False
 
         cleaned.append(line)
 
+    # creates paper block if it doesn't exist
     if not paper_modified:
         cleaned.append("\n\\paper {\n  tagline = ##f\n}\n")
 
@@ -63,8 +64,6 @@ def clean_ly_file(path: str) -> None:
 def generate_random_score(output_file='score') -> None:
 
     s = stream.Stream()
-    s.append(meter.TimeSignature("4/4"))
-    s.append(key.KeySignature(0))
 
     notes = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4']
 
