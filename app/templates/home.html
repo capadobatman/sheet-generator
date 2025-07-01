@@ -10,74 +10,27 @@
     <main class="flex min-h-screen">
     <!-- Coluna esquerda -->
     <div class="flex-1">
-        <h2 id="leftheader" class="text-3xl  font-bold  p-6 bg-black">Generate Random Score</h2>
+        <h2 id="leftheader" class="text-3xl  font-bold  p-6 bg-black border-b-9 border-b-gray-700">Generate Random Score</h2>
         <div class="flex items-center justify-center min-h-screen">
             <form action="{{ url_for('main.generate') }}" method="get">
-                <button id="generateBtn" class="m-4 px-4 py-2 rounded bg-black hover:bg-gray-400 font-bold" type="submit">Generate Score</button>
+                <button id="generateBtn" class="m-4 px-4 py-2 rounded bg-black hover:bg-gray-400 font-bold border-b-3 border-b-gray-700" type="submit">Generate Score</button>
             </form>
         </div>
     </div>
 
     <!-- Coluna central -->
     <div class="flex items-center justify-center bg-black shrink-0">
-
-        <img src="../static/score.png" alt="Generated Score" class="" id="score">
+        <img src="{{ url_for('static', filename='score.png') }}" alt="Generated Score" id="score">
     </div>
 
     <!-- Coluna direita -->
     <div class="flex-1">
-        <h2 id="rightheader" class="text-3xl  font-bold p-6 bg-black">Toggle</h2>
+        <h2 id="rightheader" class="text-3xl  font-bold p-6 bg-black border-b-9 border-b-gray-700">Settings</h2>
         <div class="flex items-center justify-center min-h-screen">
-            <button onclick="toggleTheme()" id="botao" class="m-4 px-4 py-2 bg-black  hover:bg-gray-400 rounded font-bold">Toggle Theme</button>
+            <button onclick="toggleTheme()" id="botao" class="m-4 px-4 py-2 bg-black  hover:bg-gray-400 rounded font-bold border-b-3 border-b-gray-700">Toggle Theme</button>
         </div>
     </div>
     </main>
-    <script>
-        function applyTheme(theme) {
-            const body = document.body;
-            const generateBtn = document.getElementById("generateBtn");
-            const toggleBtn = document.getElementById("botao");
-            const image = document.getElementById("score");
-            const normal = "{{ url_for('static', filename='score.png') }}";
-            const dark = "{{ url_for('static', filename='score_dark.png') }}";
-
-            if (theme === "dark") {
-                body.classList.remove("bg-white");
-                body.classList.add("bg-black");
-
-                toggleBtn.classList.remove("bg-black");
-                toggleBtn.classList.add("bg-gray-500");
-
-                generateBtn.classList.remove("bg-black");
-                generateBtn.classList.add("bg-gray-500");
-
-                image.src = dark;
-            } else {
-                body.classList.remove("bg-black");
-                body.classList.add("bg-white");
-
-                toggleBtn.classList.remove("bg-gray-500");
-                toggleBtn.classList.add("bg-black");
-
-                generateBtn.classList.remove("bg-gray-500");
-                generateBtn.classList.add("bg-black");
-
-                image.src = normal;
-            }
-        }
-
-        function toggleTheme() {
-            const current = localStorage.getItem("theme");
-            const next = current === "dark" ? "light" : "dark";
-            localStorage.setItem("theme", next);
-            applyTheme(next);
-        }
-
-        window.onload = () => {
-            const saved = localStorage.getItem("theme") || "light"; // padrão
-            applyTheme(saved);
-    };
-
-    </script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
