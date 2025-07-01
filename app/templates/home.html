@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html class="h-screen overflow-hidden">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tailwind Teste</title>
+    <link href="../static/output.css" rel="stylesheet">
+</head>
+<body class="bg-white h-full overflow-hidden text-white">
+    <main class="flex min-h-screen">
+    <!-- Coluna esquerda -->
+    <div class="flex-1">
+        <h2 id="leftheader" class="text-3xl  font-bold  p-6 bg-black">Generate Random Score</h2>
+        <div class="flex items-center justify-center min-h-screen">
+            <form action="{{ url_for('main.generate') }}" method="get">
+                <button id="generateBtn" class="m-4 px-4 py-2 rounded bg-black hover:bg-gray-400 font-bold" type="submit">Generate Score</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Coluna central -->
+    <div class="flex items-center justify-center bg-black shrink-0">
+
+        <img src="../static/score.png" alt="Generated Score" class="" id="score">
+    </div>
+
+    <!-- Coluna direita -->
+    <div class="flex-1">
+        <h2 id="rightheader" class="text-3xl  font-bold p-6 bg-black">Toggle</h2>
+        <div class="flex items-center justify-center min-h-screen">
+            <button onclick="toggleTheme()" id="botao" class="m-4 px-4 py-2 bg-black  hover:bg-gray-400 rounded font-bold">Toggle Theme</button>
+        </div>
+    </div>
+    </main>
+    <script>
+        function toggleTheme() {
+            const image = document.getElementById("score");
+            const normal = "{{ url_for('static', filename='score.png') }}";
+            const dark = "{{ url_for('static', filename='score_dark.png') }}";
+            const body = document.body;
+            const tgbutton = document.getElementById("botao");
+            const generateBtn = document.getElementById("generateBtn");
+            const leftheader = document.getElementById("leftheader");
+            const rightheader = document.getElementById("rightheader");
+
+            body.classList.toggle("bg-white");
+            body.classList.toggle("bg-black");
+            body.classList.toggle("text-black");
+            body.classList.toggle("text-white");
+            tgbutton.classList.toggle("bg-gray-700");
+            tgbutton.classList.toggle("bg-black");
+            generateBtn.classList.toggle("bg-gray-700");
+            leftheader.classList.toggle("bg-gray-700");
+            rightheader.classList.toggle("bg-gray-700");
+
+            image.src = image.src.includes("score.png") ? dark : normal
+        }
+    </script>
+</body>
+</html>

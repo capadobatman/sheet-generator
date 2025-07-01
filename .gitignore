@@ -5,4 +5,10 @@ outputs/
 *.ly
 *.midi
 *.png
+*.json
+node_modules/
+src/
+test.html
+tscript.js
+tstyle.css
 reminder.txt

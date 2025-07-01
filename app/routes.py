@@ -1,5 +1,5 @@
 import os
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for # type: ignore
 from app.generator import generate_random_score
 from pathlib import Path
 
@@ -10,11 +10,12 @@ IMAGE_PATH = BASE_DIR / "static" / "score.png"
 
 
 @main_bp.route('/')
-def index():
+def home():
     if os.path.exists(IMAGE_PATH):
-        return render_template('index.html', image=IMAGE_PATH)
+        return render_template('home.html')
     else:
-        return render_template('index.html', image=None)
+        return render_template('home.html')
+
 
 
 @main_bp.route('/generate')
@@ -24,4 +25,4 @@ def generate():
 
     generate_random_score()
 
-    return redirect(url_for('main.index'))
+    return redirect(url_for('main.home'))
