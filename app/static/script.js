@@ -1,6 +1,5 @@
 function applyTheme(theme) {
     const body = document.body;
-    const toggleBtn = document.getElementById("botao");
     const image = document.getElementById("score");
     const normal = "/static/score.png";
     const dark = "/static/score_dark.png";
@@ -24,6 +23,21 @@ function toggleTheme() {
 }
 
 window.onload = () => {
-    const saved = localStorage.getItem("theme") || "light";
-    applyTheme(saved);
+    const savedTheme = localStorage.getItem("theme") || "light";
+    applyTheme(savedTheme);
+
+    const savedOption = localStorage.getItem("chosenOption");
+    if (savedOption) {
+        const selectedInput = document.querySelector(`input[name="option"][value="${savedOption}"]`);
+        if (selectedInput) selectedInput.checked = true;
+    }
+
+    const radioInputs = document.querySelectorAll('input[name="option"]');
+    radioInputs.forEach((input) => {
+        input.addEventListener("change", () => {
+            if (input.checked) {
+                localStorage.setItem("chosenOption", input.value);
+            }
+        });
+    });
 };

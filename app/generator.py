@@ -1,4 +1,5 @@
-from music21 import stream, note, meter, key, environment # type:ignore
+from music21 import stream, note, instrument, clef, environment # type:ignore
+from music21.layout import StaffGroup
 from PIL import Image, ImageOps #type:ignore
 import random
 import os
@@ -61,22 +62,70 @@ def clean_ly_file(path: str, staffsize=25) -> None:
         file.writelines(cleaned)
 
 
-def generate_random_score(output_file='score') -> None:
+def single_generate(measures):
+    score = stream.Stream()
 
-    s = stream.Stream()
+    notes = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5', 'D5']
 
-    notes = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4']
-
-    for _ in range(40): # 40 measures
+    for _ in range(measures): # number of measures
         m = stream.Measure()
         for _ in range(4): # 4 notes each
             pitch = random.choice(notes)
             m.append(note.Note(pitch, quarterLength=1))
             
-        s.append(m)
+        score.append(m)
+    return score
+
+
+def duo_generate(measures):
+    upper = stream.Part()
+    upper.id = 'RH'
+    upper.append(instrument.Piano())
+
+    lower = stream.Part()
+    lower.id = 'LH'
+    lower.append(instrument.Piano())
+
+    notes_treble = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5', 'D5']
+    notes_bass = ['E2', 'F2', 'G2', 'A2', 'B2', 'C3', 'D3', 'E3', 'F3']
+
+    for i in range(measures):
+        um = stream.Measure()
+        lm = stream.Measure()
+
+        if i == 0:
+            um.insert(0, clef.TrebleClef())
+            lm.insert(0, clef.BassClef())
+
+        for _ in range(4):
+            um.append(note.Note(random.choice(notes_treble), quarterLength=1))
+            lm.append(note.Note(random.choice(notes_bass), quarterLength=1))
+
+        upper.append(um)
+        lower.append(lm)
+
+    piano_group = StaffGroup([upper, lower], group='PianoStaff')
+    piano_group.name = "Piano"
+
+    score = stream.Score()
+
+    score.append(upper)
+    score.append(lower)
+    return score
+
+
+def generate_random_score(output_file='score', two_voices=False) -> None:
+
+    # single voice
+    if not two_voices:
+        score = single_generate(40)
+
+    # two voices
+    else:
+        score = duo_generate(30)
 
     ly_path = STATIC_DIR / f"{output_file}.ly"
-    s.write('lilypond', fp=str(ly_path))
+    score.write('lilypond', fp=str(ly_path))
 
     clean_ly_file(ly_path)
 

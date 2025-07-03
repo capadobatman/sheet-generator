@@ -1,6 +1,5 @@
 __pycache__/
 venv/
-outputs/
 *.pdf
 *.ly
 *.midi
@@ -8,7 +7,4 @@ outputs/
 *.json
 node_modules/
 src/
-test.html
-tscript.js
-tstyle.css
 reminder.txt

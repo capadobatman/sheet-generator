@@ -8,27 +8,39 @@
 </head>
 <body class="bg-white h-full overflow-hidden text-white">
     <main class="flex min-h-screen">
-    <!-- Coluna esquerda -->
+    <!-- Left Column -->
     <div class="flex-1">
         <h2 id="leftheader" class="text-3xl  font-bold  p-6 bg-black border-b-9 border-b-gray-700">Generate Random Score</h2>
-        <div class="flex items-center justify-center min-h-screen">
-            <form action="{{ url_for('main.generate') }}" method="get">
+        <div class="flex flex-col items-center justify-center min-h-screen">
+            <form action="{{ url_for('main.generate') }}" method="post">
+                <label class="flex items-center space-x-2 text-gray-600 font-bold">
+                    <input type="radio" name="option" value="1" class="accent-black" />
+                    <span>1 Voice</span>
+                </label>
+                <label class="flex items-center space-x-2 text-gray-600 font-bold">
+                    <input type="radio" name="option" value="2" class="accent-black" />
+                    <span>2 Voices</span>
+                </label>
                 <button id="generateBtn" class="m-4 px-4 py-2 rounded bg-black hover:bg-gray-400 font-bold border-b-3 border-b-gray-700" type="submit">Generate Score</button>
             </form>
         </div>
     </div>
 
-    <!-- Coluna central -->
+    <!-- Central Column -->
     <div class="flex items-center justify-center bg-black shrink-0">
         <img src="{{ url_for('static', filename='score.png') }}" alt="Generated Score" id="score">
     </div>
 
-    <!-- Coluna direita -->
+    <!-- Right Column -->
     <div class="flex-1">
         <h2 id="rightheader" class="text-3xl  font-bold p-6 bg-black border-b-9 border-b-gray-700">Settings</h2>
-        <div class="flex items-center justify-center min-h-screen">
-            <button onclick="toggleTheme()" id="botao" class="m-4 px-4 py-2 bg-black  hover:bg-gray-400 rounded font-bold border-b-3 border-b-gray-700">Toggle Theme</button>
+        <div class="flex flex-col items-center justify-center min-h-screen">
+            <button onclick="toggleTheme()" id="botao"
+                class="m-4 px-4 py-2 bg-black hover:bg-gray-400 rounded font-bold border-b-3 border-b-gray-700">
+                Toggle Theme
+            </button>
         </div>
+
     </div>
     </main>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
