@@ -13,14 +13,22 @@
         <h2 id="leftheader" class="text-3xl  font-bold  p-6 bg-black border-b-9 border-b-gray-700">Generate Random Score</h2>
         <div class="flex flex-col items-center justify-center min-h-screen">
             <form action="{{ url_for('main.generate') }}" method="post">
-                <label class="flex items-center space-x-2 text-gray-600 font-bold">
-                    <input type="radio" name="option" value="1" class="accent-black" />
-                    <span>1 Voice</span>
+                <p class="font-bold text-gray-500">Number of voices:</p><br>
+                <div class="flex space-x-4">
+                <label>
+                    <input type="radio" name="option" value="1" class="hidden peer" />
+                    <div class="px-9 py-2 rounded border bg-gray-600 peer-checked:bg-green-500 peer-checked:text-white cursor-pointer">
+                    1
+                    </div>
                 </label>
-                <label class="flex items-center space-x-2 text-gray-600 font-bold">
-                    <input type="radio" name="option" value="2" class="accent-black" />
-                    <span>2 Voices</span>
+
+                <label>
+                    <input type="radio" name="option" value="2" class="hidden peer" />
+                    <div class="px-9 py-2 rounded border bg-gray-600 peer-checked:bg-green-500 peer-checked:text-white cursor-pointer te">
+                    2
+                    </div>
                 </label>
+                </div>
                 <button id="generateBtn" class="m-4 px-4 py-2 rounded bg-black hover:bg-gray-400 font-bold border-b-3 border-b-gray-700" type="submit">Generate Score</button>
             </form>
         </div>
