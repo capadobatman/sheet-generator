@@ -2,22 +2,24 @@ function applyTheme(theme) {
     const body = document.body;
     const lcolumn = document.getElementById("lcolumn");
     const image = document.getElementById("score");
-    const normal = "/static/score.png";
-    const dark = "/static/score_dark.png";
+    const selects = [
+        document.getElementById("select1l"),
+        document.getElementById("select1h"),
+        document.getElementById("select2l"),
+        document.getElementById("select2h")
+    ];
 
-    if (theme === "dark") {
-        body.classList.remove("bg-white");
-        body.classList.add("bg-black");
-        lcolumn.classList.remove("text-black");
-        lcolumn.classList.add("text-white");
-        image.src = dark;
-    } else {
-        body.classList.remove("bg-black");
-        body.classList.add("bg-white");
-        lcolumn.classList.remove("text-white");
-        lcolumn.classList.add("text-black");
-        image.src = normal;
-    }
+    const isDark = theme === "dark";
+    body.classList.toggle("bg-white", !isDark);
+    body.classList.toggle("bg-black", isDark);
+    lcolumn.classList.toggle("text-black", !isDark);
+    lcolumn.classList.toggle("text-white", isDark);
+    image.src = isDark ? "/static/score_dark.png" : "/static/score.png";
+
+    selects.forEach(select => {
+        select.classList.toggle("bg-white", !isDark);
+        select.classList.toggle("bg-black", isDark);
+    });
 }
 
 function toggleTheme() {
