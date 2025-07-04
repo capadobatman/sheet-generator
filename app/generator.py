@@ -62,13 +62,15 @@ def clean_ly_file(path: str, staffsize=25) -> None:
         file.writelines(cleaned)
 
 
-def single_generate(measures):
+def single_generate(measures, notes, clef1):
     score = stream.Stream()
 
-    notes = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5', 'D5']
-
-    for _ in range(measures): # number of measures
+    for i in range(measures): # number of measures
         m = stream.Measure()
+
+        if i == 0:
+            m.insert(0, clef_tl(clef1))
+
         for _ in range(4): # 4 notes each
             pitch = random.choice(notes)
             m.append(note.Note(pitch, quarterLength=1))
@@ -77,7 +79,7 @@ def single_generate(measures):
     return score
 
 
-def duo_generate(measures):
+def duo_generate(measures, notes1, notes2, clef1, clef2):
     upper = stream.Part()
     upper.id = 'RH'
     upper.append(instrument.Piano())
@@ -86,20 +88,17 @@ def duo_generate(measures):
     lower.id = 'LH'
     lower.append(instrument.Piano())
 
-    notes_treble = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5', 'D5']
-    notes_bass = ['E2', 'F2', 'G2', 'A2', 'B2', 'C3', 'D3', 'E3', 'F3']
-
     for i in range(measures):
         um = stream.Measure()
         lm = stream.Measure()
 
         if i == 0:
-            um.insert(0, clef.TrebleClef())
-            lm.insert(0, clef.BassClef())
+            um.insert(0, clef_tl(clef1))
+            lm.insert(0, clef_tl(clef2))
 
         for _ in range(4):
-            um.append(note.Note(random.choice(notes_treble), quarterLength=1))
-            lm.append(note.Note(random.choice(notes_bass), quarterLength=1))
+            um.append(note.Note(random.choice(notes1), quarterLength=1))
+            lm.append(note.Note(random.choice(notes2), quarterLength=1))
 
         upper.append(um)
         lower.append(lm)
@@ -114,15 +113,38 @@ def duo_generate(measures):
     return score
 
 
-def generate_random_score(output_file='score', two_voices=False) -> None:
+def note_range(notes):
+    # todo ->future scale implementation
+    low, high = notes[0], notes[1]
+    full_range = ['C2', 'D2', 'E2', 'F2', 'G2', 'A2', 'B2', 'C3', 'D3', 'E3', 'F3', 'G3', 'A3', 'B3',
+                  'C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5', 'D5', 'E5', 'F5', 'G5', 'A5', 'B5',
+                  'C6', 'D6', 'E6', 'F6', 'G6', 'A6', 'B6']
+    return full_range[full_range.index(low):full_range.index(high)+1]
 
+
+def clef_tl(clef_: str):
+    clef_map = {
+        "T": clef.TrebleClef,
+        "A": clef.AltoClef,
+        "B": clef.BassClef
+    }
+
+    if clef_ not in clef_map:
+        raise ValueError(f"Clef '{clef_}' not recognized.")
+
+    return clef_map[clef_]()
+
+
+def generate_random_score(output_file='score', two_voices=False, notes1=["C4", "B4"], notes2=["C3", "B3"], clef1="T", clef2="T") -> None:
+    notes1 = note_range(notes=notes1)
     # single voice
     if not two_voices:
-        score = single_generate(40)
+        score = single_generate(40, notes=notes1, clef1=clef1)
 
     # two voices
     else:
-        score = duo_generate(30)
+        notes2 = note_range(notes2)
+        score = duo_generate(30, notes1=notes1, notes2=notes2, clef1=clef1, clef2=clef2)
 
     ly_path = STATIC_DIR / f"{output_file}.ly"
     score.write('lilypond', fp=str(ly_path))

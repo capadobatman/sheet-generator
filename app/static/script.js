@@ -37,10 +37,16 @@ function toggleVoiceFields() {
   voice2.classList.toggle("hidden", !isTwoVoices);
 }
 
+const clefRangeMap = {
+    T: { min: 4, max: 6 },
+    A: { min: 3, max: 5 },
+    B: { min: 2, max: 4 }
+};
+
 function populateNoteSelect(selectId, minOctave = 2, maxOctave = 6) {
     const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
     const select = document.getElementById(selectId);
-    select.innerHTML = ''; 
+    select.innerHTML = '';
 
     for (let octave = minOctave; octave <= maxOctave; octave++) {
         for (let note of notes) {
@@ -51,11 +57,24 @@ function populateNoteSelect(selectId, minOctave = 2, maxOctave = 6) {
     }
 }
 
+function updateNoteSelects(clefSelectId, lowSelectId, highSelectId) {
+    const clef = document.getElementById(clefSelectId).value;
+    const range = clefRangeMap[clef] || { min: 2, max: 6 };
+    populateNoteSelect(lowSelectId, range.min, range.max);
+    populateNoteSelect(highSelectId, range.min, range.max);
+}
+
 window.onload = () => {
-    populateNoteSelect("select1l")
-    populateNoteSelect("select1h")
-    populateNoteSelect("select2l")
-    populateNoteSelect("select2h")
+    updateNoteSelects("selectclef1", "select1l", "select1h");
+    updateNoteSelects("selectclef2", "select2l", "select2h");
+
+    document.getElementById("selectclef1").addEventListener("change", () => {
+        updateNoteSelects("selectclef1", "select1l", "select1h");
+    });
+    document.getElementById("selectclef2").addEventListener("change", () => {
+        updateNoteSelects("selectclef2", "select2l", "select2h");
+    });
+
     const savedTheme = localStorage.getItem("theme") || "light";
     applyTheme(savedTheme);
 
@@ -73,5 +92,6 @@ window.onload = () => {
             }
         });
     });
+
     toggleVoiceFields();
 };

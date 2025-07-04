@@ -20,14 +20,21 @@ def home():
 
 @main_bp.route('/generate', methods=["POST"])
 def generate():
-    option = request.form.get("num_voices")
+    voice = request.form.get("num_voices")
     if os.path.exists(IMAGE_PATH):
         os.remove(IMAGE_PATH)
 
-    if option == "2":
-        generate_random_score(two_voices=True)
+    clef1 = request.form.get("clef1")
+    min_note_1 = request.form.get("min_note_1")
+    max_note_1 = request.form.get("max_note_1")
+
+    if voice == "2":
+        clef2 = request.form.get("clef2")
+        min_note_2 = request.form.get("min_note_2")
+        max_note_2 = request.form.get("max_note_2")
+        generate_random_score(two_voices=True, notes1=[min_note_1, max_note_1], notes2=[min_note_2, max_note_2], clef1=clef1, clef2=clef2)
 
     else:
-        generate_random_score()
+        generate_random_score(notes1=[min_note_1, max_note_1], clef1=clef1)
 
     return redirect(url_for('main.home'))
