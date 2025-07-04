@@ -6,7 +6,9 @@ function applyTheme(theme) {
         document.getElementById("select1l"),
         document.getElementById("select1h"),
         document.getElementById("select2l"),
-        document.getElementById("select2h")
+        document.getElementById("select2h"),
+        document.getElementById("selectclef1"),
+        document.getElementById("selectclef2")
     ];
 
     const isDark = theme === "dark";
