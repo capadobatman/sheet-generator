@@ -8,7 +8,7 @@ function applyTheme(theme) {
         document.getElementById("select2l"),
         document.getElementById("select2h"),
         document.getElementById("selectclef1"),
-        document.getElementById("selectclef2")
+        document.getElementById("selectclef2"),
     ];
 
     const isDark = theme === "dark";
@@ -37,7 +37,25 @@ function toggleVoiceFields() {
   voice2.classList.toggle("hidden", !isTwoVoices);
 }
 
+function populateNoteSelect(selectId, minOctave = 2, maxOctave = 6) {
+    const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    const select = document.getElementById(selectId);
+    select.innerHTML = ''; 
+
+    for (let octave = minOctave; octave <= maxOctave; octave++) {
+        for (let note of notes) {
+            const value = note + octave;
+            const option = new Option(value, value);
+            select.add(option);
+        }
+    }
+}
+
 window.onload = () => {
+    populateNoteSelect("select1l")
+    populateNoteSelect("select1h")
+    populateNoteSelect("select2l")
+    populateNoteSelect("select2h")
     const savedTheme = localStorage.getItem("theme") || "light";
     applyTheme(savedTheme);
 
