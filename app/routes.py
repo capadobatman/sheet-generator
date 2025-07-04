@@ -20,7 +20,7 @@ def home():
 
 @main_bp.route('/generate', methods=["POST"])
 def generate():
-    option = request.form.get("option")
+    option = request.form.get("num_voices")
     if os.path.exists(IMAGE_PATH):
         os.remove(IMAGE_PATH)
 

@@ -3,33 +3,78 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Tailwind Teste</title>
+    <title>Score Generator</title>
     <link href="../static/output.css" rel="stylesheet">
 </head>
 <body class="bg-white h-full overflow-hidden text-white">
     <main class="flex min-h-screen">
     <!-- Left Column -->
-    <div class="flex-1">
-        <h2 id="leftheader" class="text-3xl  font-bold  p-6 bg-black border-b-9 border-b-gray-700">Generate Random Score</h2>
+    <div id="lcolumn" class="flex-1">
+        <h2 id="leftheader" class="text-3xl  font-bold  p-6 bg-black border-b-9 border-b-gray-700 text-white">Generate Random Score</h2>
         <div class="flex flex-col items-center justify-center min-h-screen">
             <form action="{{ url_for('main.generate') }}" method="post">
-                <p class="font-bold text-gray-500">Number of voices:</p><br>
+                <p class="block mb-1 font-semibold ">Number of voices:</p>
+
+                <!-- Radio Voice Selection -->
                 <div class="flex space-x-4">
                 <label>
-                    <input type="radio" name="option" value="1" class="hidden peer" />
-                    <div class="px-9 py-2 rounded border bg-gray-600 peer-checked:bg-green-500 peer-checked:text-white cursor-pointer">
+                    <input type="radio" name="num_voices" value="1" checked onchange="toggleVoiceFields()" class="hidden peer" />
+                    <div class="px-9 py-2 font-bold rounded border bg-gray-600 peer-checked:bg-green-500 cursor-pointer">
                     1
                     </div>
                 </label>
 
                 <label>
-                    <input type="radio" name="option" value="2" class="hidden peer" />
-                    <div class="px-9 py-2 rounded border bg-gray-600 peer-checked:bg-green-500 peer-checked:text-white cursor-pointer te">
+                    <input type="radio" name="num_voices" value="2" onchange="toggleVoiceFields()" class="hidden peer" />
+                    <div class="px-9 py-2 font-bold rounded border bg-gray-600 peer-checked:bg-green-500 cursor-pointer">
                     2
                     </div>
                 </label>
                 </div>
-                <button id="generateBtn" class="m-4 px-4 py-2 rounded bg-black hover:bg-gray-400 font-bold border-b-3 border-b-gray-700" type="submit">Generate Score</button>
+
+                <!-- Voice 1 -->
+                <fieldset id="voice1" class="border p-4 rounded mb-4">
+                <legend class="text-lg font-bold mb-2">Voice 1</legend>
+
+                <label class="block mb-1 font-semibold">Lowest Note:</label>
+                <select name="min_note_1" class="border rounded p-2 w-full mb-3">
+                    <option value="C3">C3</option>
+                    <option value="D3">D3</option>
+                    <option value="E3">E3</option>
+                    <!-- ... -->
+                </select>
+
+                <label class="block mb-1 font-semibold">Highest Note:</label>
+                <select name="max_note_1" class="border rounded p-2 w-full">
+                    <option value="C5">C5</option>
+                    <option value="D5">D5</option>
+                    <option value="E5">E5</option>
+                    <!-- ... -->
+                </select>
+                </fieldset>
+
+                <!-- Voice 2 -->
+                <fieldset id="voice2" class="border p-4 rounded mb-4 hidden">
+                <legend class="text-lg font-bold mb-2">Voice 2</legend>
+
+                <label class="block mb-1 font-semibold">Lowest Note:</label>
+                <select name="min_note_2" class="border rounded p-2 w-full mb-3">
+                    <option value="C2">C2</option>
+                    <option value="D2">D2</option>
+                    <option value="E2">E2</option>
+                    <!-- ... -->
+                </select>
+
+                <label class="block mb-1 font-semibold">Highest Note:</label>
+                <select name="max_note_2" class="border rounded p-2 w-full">
+                    <option value="B3">B3</option>
+                    <option value="C4">C4</option>
+                    <option value="D4">D4</option>
+                    <!-- ... -->
+                </select>
+                </fieldset>
+                
+                <button id="generateBtn" class="m-4 px-4 py-2 rounded bg-black hover:bg-gray-400 font-bold border-b-3 border-b-gray-700 text-white" type="submit">Generate Score</button>
             </form>
         </div>
     </div>
