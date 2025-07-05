@@ -1,4 +1,4 @@
-from music21 import stream, note, instrument, clef, environment # type:ignore
+from music21 import stream, note, instrument, clef, environment, scale, pitch # type:ignore
 from music21.layout import StaffGroup
 from PIL import Image, ImageOps #type:ignore
 import random
@@ -113,15 +113,6 @@ def duo_generate(measures, notes1, notes2, clef1, clef2):
     return score
 
 
-def note_range(notes):
-    # todo ->future scale implementation
-    low, high = notes[0], notes[1]
-    full_range = ['C2', 'D2', 'E2', 'F2', 'G2', 'A2', 'B2', 'C3', 'D3', 'E3', 'F3', 'G3', 'A3', 'B3',
-                  'C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5', 'D5', 'E5', 'F5', 'G5', 'A5', 'B5',
-                  'C6', 'D6', 'E6', 'F6', 'G6', 'A6', 'B6']
-    return full_range[full_range.index(low):full_range.index(high)+1]
-
-
 def clef_tl(clef_: str):
     clef_map = {
         "T": clef.TrebleClef,
@@ -135,15 +126,48 @@ def clef_tl(clef_: str):
     return clef_map[clef_]()
 
 
-def generate_random_score(output_file='score', two_voices=False, notes1=["C4", "B4"], notes2=["C3", "B3"], clef1="T", clef2="T") -> None:
-    notes1 = note_range(notes=notes1)
+def get_scale_notes(scale_name: str) -> list:
+    tonic, mode = scale_name.split("_")
+    if mode == "major":
+        s = scale.MajorScale(tonic)
+    
+    else:
+        s = scale.MinorScale(tonic)
+
+    return [str(pitch) for pitch in s.getPitches('C2', 'B6')]
+
+
+def note_range(notes: list, scale: str) -> list:
+    low_pitch, high_pitch = notes[0], notes[1]
+    scale_range = get_scale_notes(scale)
+
+    try:
+        ind1 = scale_range.index(low_pitch)
+        ind2 = scale_range.index(high_pitch) + 1
+        return scale_range[ind1:ind2]
+    
+    except ValueError:
+        low_midi = pitch.Pitch(low_pitch).midi
+        high_midi = pitch.Pitch(high_pitch).midi
+
+        filtered_range = []
+        for note in scale_range:
+            if low_midi <= pitch.Pitch(note).midi <= high_midi:
+                filtered_range.append(note)
+
+        return filtered_range
+
+
+def generate_random_score(output_file='score', scale="C_major", two_voices=False, notes1=["C4", "B4"], notes2=["C3", "B3"], clef1="T", clef2="T") -> None:
+    notes1 = note_range(notes=notes1, scale=scale)
+
     # single voice
     if not two_voices:
         score = single_generate(40, notes=notes1, clef1=clef1)
 
     # two voices
     else:
-        notes2 = note_range(notes2)
+        notes2 = note_range(notes2, scale=scale)
         score = duo_generate(30, notes1=notes1, notes2=notes2, clef1=clef1, clef2=clef2)
 
     ly_path = STATIC_DIR / f"{output_file}.ly"

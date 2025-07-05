@@ -9,6 +9,7 @@ function applyTheme(theme) {
         document.getElementById("select2h"),
         document.getElementById("selectclef1"),
         document.getElementById("selectclef2"),
+        document.getElementById("scale")
     ];
 
     const isDark = theme === "dark";
@@ -64,7 +65,33 @@ function updateNoteSelects(clefSelectId, lowSelectId, highSelectId) {
     populateNoteSelect(highSelectId, range.min, range.max);
 }
 
+const majorScales = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B'];
+const minorScales = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
+
+function populateScaleSelect(selectId) {
+    const select = document.getElementById(selectId);
+    select.innerHTML = '';
+
+    const groupMajor = document.createElement('optgroup');
+    groupMajor.label = 'Major';
+    majorScales.forEach(scale => {
+        const option = new Option(scale + ' Major', scale + '_major');
+        groupMajor.appendChild(option);
+    });
+
+    const groupMinor = document.createElement('optgroup');
+    groupMinor.label = 'Minor';
+    minorScales.forEach(scale => {
+        const option = new Option(scale + ' Minor', scale + '_minor');
+        groupMinor.appendChild(option);
+    });
+
+    select.appendChild(groupMajor);
+    select.appendChild(groupMinor);
+}
+
 window.onload = () => {
+    populateScaleSelect('scale');
     updateNoteSelects("selectclef1", "select1l", "select1h");
     updateNoteSelects("selectclef2", "select2l", "select2h");
 
