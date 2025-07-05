@@ -1,4 +1,4 @@
-from music21 import stream, note, instrument, clef, environment, scale, pitch # type:ignore
+from music21 import stream, note, instrument, clef, environment, scale, pitch, key # type:ignore
 from music21.layout import StaffGroup
 from PIL import Image, ImageOps #type:ignore
 import random
@@ -62,7 +62,7 @@ def clean_ly_file(path: str, staffsize=25) -> None:
         file.writelines(cleaned)
 
 
-def single_generate(measures, notes, clef1):
+def single_generate(measures, notes, clef1, scale):
     score = stream.Stream()
 
     for i in range(measures): # number of measures
@@ -70,6 +70,7 @@ def single_generate(measures, notes, clef1):
 
         if i == 0:
             m.insert(0, clef_tl(clef1))
+            score.insert(0, get_key_signature(scale))
 
         for _ in range(4): # 4 notes each
             pitch = random.choice(notes)
@@ -79,7 +80,7 @@ def single_generate(measures, notes, clef1):
     return score
 
 
-def duo_generate(measures, notes1, notes2, clef1, clef2):
+def duo_generate(measures, notes1, notes2, clef1, clef2, scale):
     upper = stream.Part()
     upper.id = 'RH'
     upper.append(instrument.Piano())
@@ -95,6 +96,7 @@ def duo_generate(measures, notes1, notes2, clef1, clef2):
         if i == 0:
             um.insert(0, clef_tl(clef1))
             lm.insert(0, clef_tl(clef2))
+            um.insert(0, get_key_signature(scale))
 
         for _ in range(4):
             um.append(note.Note(random.choice(notes1), quarterLength=1))
@@ -137,6 +139,12 @@ def get_scale_notes(scale_name: str) -> list:
     return [str(pitch) for pitch in s.getPitches('C2', 'B6')]
 
 
+def get_key_signature(scale_name:str):
+    tonic, mode = scale_name.split("_")
+    k = key.Key(tonic, mode)
+    return key.KeySignature(k.sharps)
+
+
 def note_range(notes: list, scale: str) -> list:
     low_pitch, high_pitch = notes[0], notes[1]
     scale_range = get_scale_notes(scale)
@@ -163,12 +171,12 @@ def generate_random_score(output_file='score', scale="C_major", two_voices=False
 
     # single voice
     if not two_voices:
-        score = single_generate(40, notes=notes1, clef1=clef1)
+        score = single_generate(40, notes=notes1, clef1=clef1, scale=scale)
 
     # two voices
     else:
         notes2 = note_range(notes2, scale=scale)
-        score = duo_generate(30, notes1=notes1, notes2=notes2, clef1=clef1, clef2=clef2)
+        score = duo_generate(30, notes1=notes1, notes2=notes2, clef1=clef1, clef2=clef2, scale=scale)
 
     ly_path = STATIC_DIR / f"{output_file}.ly"
     score.write('lilypond', fp=str(ly_path))
