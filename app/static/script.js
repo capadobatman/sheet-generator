@@ -78,7 +78,7 @@ function updateHighNoteOptions(lowSelectId, highSelectId, minSemitones = 3) {
     const highSelect = document.getElementById(highSelectId);
     
     const startIndex = allNotes.indexOf(lowValue);
-    highSelect.innerHTML = ''; // limpa
+    highSelect.innerHTML = '';
 
     const options = allNotes.slice(startIndex + minSemitones);
 
@@ -125,9 +125,14 @@ window.onload = () => {
     document.getElementById("select1l").addEventListener("change", () => {
     updateHighNoteOptions("select1l", "select1h");
     });
-
     document.getElementById("select2l").addEventListener("change", () => {
         updateHighNoteOptions("select2l", "select2h");
+    });
+    document.getElementById("selectclef1").addEventListener("change", (e) => {
+        sessionStorage.setItem("clef1", e.target.value);
+    });
+    document.getElementById("selectclef2").addEventListener("change", (e) => {
+        sessionStorage.setItem("clef2", e.target.value);
     });
 
     updateNoteSelects("selectclef1", "select1l", "select1h");
@@ -136,6 +141,50 @@ window.onload = () => {
     updateHighNoteOptions("select1l", "select1h");
     updateHighNoteOptions("select2l", "select2h");
 
+    const clef1 = sessionStorage.getItem("clef1");
+    const clef2 = sessionStorage.getItem("clef2");
+
+    if (clef1) {
+        document.getElementById("selectclef1").value = clef1;
+        updateNoteSelects("selectclef1", "select1l", "select1h");
+    }
+    if (clef2) {
+        document.getElementById("selectclef2").value = clef2;
+        updateNoteSelects("selectclef2", "select2l", "select2h");
+    }
+
+    const savedScale = sessionStorage.getItem("selectedScale");
+    if (savedScale) {
+        document.getElementById("scale").value = savedScale;
+    }
+
+    const min1 = sessionStorage.getItem("min_note_1");
+    const max1 = sessionStorage.getItem("max_note_1");
+    if (min1) document.getElementById("select1l").value = min1;
+    if (max1) document.getElementById("select1h").value = max1;
+
+    const min2 = sessionStorage.getItem("min_note_2");
+    const max2 = sessionStorage.getItem("max_note_2");
+    if (min2) document.getElementById("select2l").value = min2;
+    if (max2) document.getElementById("select2h").value = max2;
+
+    document.getElementById("scale").addEventListener("change", (e) => {
+        sessionStorage.setItem("selectedScale", e.target.value);
+    });
+
+    document.getElementById("select1l").addEventListener("change", (e) => {
+        sessionStorage.setItem("min_note_1", e.target.value);
+    });
+    document.getElementById("select1h").addEventListener("change", (e) => {
+        sessionStorage.setItem("max_note_1", e.target.value);
+    });
+
+    document.getElementById("select2l").addEventListener("change", (e) => {
+        sessionStorage.setItem("min_note_2", e.target.value);
+    });
+    document.getElementById("select2h").addEventListener("change", (e) => {
+        sessionStorage.setItem("max_note_2", e.target.value);
+    });
 
     const savedTheme = localStorage.getItem("theme") || "light";
     applyTheme(savedTheme);
