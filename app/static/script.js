@@ -68,24 +68,36 @@ function populateNoteSelect(selectId, minOctave = 2, maxOctave = 6) {
 
 function updateNoteSelects(clefSelectId, lowSelectId, highSelectId) {
     const clef = document.getElementById(clefSelectId).value;
-    const range = clefRangeMap[clef] || { min: 2, max: 6 };
-    populateNoteSelect(lowSelectId, range.min, range.max);
-    populateNoteSelect(highSelectId, range.min, range.max);
-}
-
-function updateHighNoteOptions(lowSelectId, highSelectId, minSemitones = 3) {
-    const lowValue = document.getElementById(lowSelectId).value;
+    const lowSelect = document.getElementById(lowSelectId);
     const highSelect = document.getElementById(highSelectId);
-    
-    const startIndex = allNotes.indexOf(lowValue);
+
+    const range = clefRangeMap[clef] || { min: 2, max: 6 };
+    const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
+    const validNotes = [];
+    for (let octave = range.min; octave <= range.max; octave++) {
+        for (let note of notes) {
+            validNotes.push(note + octave);
+        }
+    }
+
+    const prevLow = lowSelect.value;
+    const prevHigh = highSelect.value;
+
+    lowSelect.innerHTML = '';
+    validNotes.forEach(n => lowSelect.add(new Option(n, n)));
+
+    const newLow = validNotes.includes(prevLow) ? prevLow : validNotes[0];
+    lowSelect.value = newLow;
+
+    const lowIndex = allNotes.indexOf(newLow);
+    const minHighIndex = lowIndex + 3;
+
+    const validHighNotes = allNotes.slice(minHighIndex).filter(n => validNotes.includes(n));
     highSelect.innerHTML = '';
+    validHighNotes.forEach(n => highSelect.add(new Option(n, n)));
 
-    const options = allNotes.slice(startIndex + minSemitones);
-
-    options.forEach(note => {
-        const opt = new Option(note, note);
-        highSelect.add(opt);
-    });
+    highSelect.value = validHighNotes.includes(prevHigh) ? prevHigh : validHighNotes[0];
 }
 
 const majorScales = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B'];
@@ -116,42 +128,33 @@ function populateScaleSelect(selectId) {
 window.onload = () => {
     populateScaleSelect('scale');
 
-    document.getElementById("selectclef1").addEventListener("change", () => {
-        updateNoteSelects("selectclef1", "select1l", "select1h");
-    });
-    document.getElementById("selectclef2").addEventListener("change", () => {
-        updateNoteSelects("selectclef2", "select2l", "select2h");
-    });
     document.getElementById("select1l").addEventListener("change", () => {
-    updateHighNoteOptions("select1l", "select1h");
+    updateNoteSelects("selectclef1", "select1l", "select1h");
     });
     document.getElementById("select2l").addEventListener("change", () => {
-        updateHighNoteOptions("select2l", "select2h");
+        updateNoteSelects("selectclef2", "select2l", "select2h");
     });
     document.getElementById("selectclef1").addEventListener("change", (e) => {
-        sessionStorage.setItem("clef1", e.target.value);
+    sessionStorage.setItem("clef1", e.target.value);
+        updateNoteSelects("selectclef1", "select1l", "select1h");
     });
+
     document.getElementById("selectclef2").addEventListener("change", (e) => {
         sessionStorage.setItem("clef2", e.target.value);
+        updateNoteSelects("selectclef2", "select2l", "select2h");
     });
 
-    updateNoteSelects("selectclef1", "select1l", "select1h");
-    updateNoteSelects("selectclef2", "select2l", "select2h");
-
-    updateHighNoteOptions("select1l", "select1h");
-    updateHighNoteOptions("select2l", "select2h");
-
     const clef1 = sessionStorage.getItem("clef1");
-    const clef2 = sessionStorage.getItem("clef2");
-
     if (clef1) {
         document.getElementById("selectclef1").value = clef1;
-        updateNoteSelects("selectclef1", "select1l", "select1h");
     }
+    updateNoteSelects("selectclef1", "select1l", "select1h");
+
+    const clef2 = sessionStorage.getItem("clef2");
     if (clef2) {
         document.getElementById("selectclef2").value = clef2;
-        updateNoteSelects("selectclef2", "select2l", "select2h");
     }
+    updateNoteSelects("selectclef2", "select2l", "select2h");
 
     const savedScale = sessionStorage.getItem("selectedScale");
     if (savedScale) {

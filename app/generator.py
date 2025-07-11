@@ -70,7 +70,7 @@ def single_generate(measures, notes, clef1, scale):
 
         if i == 0:
             m.insert(0, clef_tl(clef1))
-            score.insert(0, get_key_signature(scale))
+            m.insert(0, get_key_signature(scale))
 
         for _ in range(4): # 4 notes each
             pitch = random.choice(notes)
@@ -97,6 +97,7 @@ def duo_generate(measures, notes1, notes2, clef1, clef2, scale):
             um.insert(0, clef_tl(clef1))
             lm.insert(0, clef_tl(clef2))
             um.insert(0, get_key_signature(scale))
+            lm.insert(0, get_key_signature(scale))
 
         for _ in range(4):
             um.append(note.Note(random.choice(notes1), quarterLength=1))
